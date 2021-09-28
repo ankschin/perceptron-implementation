@@ -1,7 +1,4 @@
 import numpy as np
-import pandas as pd
-from pandas.core.algorithms import mode
-
 
 class Perceptron():
     
@@ -56,59 +53,3 @@ class Perceptron():
     def total_loss(self):
         loss_total= np.sum(self.error)
         print(f"total loss: \n{loss_total}")
-
-
-
-
-def prepare_data(df):
-    X= df.drop("y", axis= 1)
-    y= df["y"]
-
-    return X,y
-
-
-AND={
-    "x1":[0,0,1,1],
-    "x2":[0,1,0,1],
-    "y":[0,0,0,1]
-}
-
-df= pd.DataFrame(AND)
-
-df
-
-X,y= prepare_data(df)
-ETA= 0.3
-EPOCHS= 10
-model= Perceptron(eta= ETA, epochs=EPOCHS)
-model.fit(X,y)
-
-l= model.total_loss()
-
-
-#pred= model.predict
-
-
-
-#passing single datapoint to predict
-input = np.array([[0,1],[1,1]])
-y_pred= model.predict(input)
-print(f"y pred: \n{y_pred}")
-loss= model.total_loss()
-
-
-import os
-import joblib
-## Save model
-def save_model(model, filename):
-    model_dir= "models"
-    os.makedirs(model_dir, exist_ok=True)# create only if dir doesn't exist
-    filePath= os.path.join(model_dir, filename)
-    joblib.dump(model, filePath)
-
-save_model(model,"and.model")
-
-
-loaded_model= joblib.load("models/and.model")
-
-loaded_model.predict(input)
