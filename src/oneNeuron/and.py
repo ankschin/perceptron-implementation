@@ -1,4 +1,13 @@
 
+import logging
+import os
+
+#Setting up logs
+logging_str= "[%(asctime)s: %(levelname)s: %(module)s] %(message)s"
+logging_dir= "logs"
+os.makedirs(os.path.join(logging_dir, "latest_log.log"), exist_ok=True)
+logging.basicConfig(filename=os.path.join(logging_dir,"latest_logs.log"), level=logging.INFO, format=logging_str)
+
 def main(data, eta, epochs):
     ## Solved module not found(utils) error using --> https://stackoverflow.com/a/61532947
     ## Python path is set to oneNeuron dir, so we need to create all imported methods and 
@@ -8,6 +17,7 @@ def main(data, eta, epochs):
     import pandas as pd
     import numpy as np
     df= pd.DataFrame(data)
+    logging.info(f"this is dataframe passed to prepare data: \n {df}")
     X,y= prepare_data(df)
     model= Perceptron(eta, epochs)
     model.fit(X,y)
@@ -37,4 +47,9 @@ if __name__ == '__main__':
     }
     ETA= 0.3
     EPOCHS= 10
-    main(data= AND, eta= ETA, epochs= EPOCHS)
+
+    try:
+        main(data= AND, eta= ETA, epochs= EPOCHS)
+    except Exception as e:
+        logging.exception(e)
+        raise e
